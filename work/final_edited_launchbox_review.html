@@ -540,7 +540,7 @@
       { type: "choice", key: "timeline", pillar: "Momentum", text: "How soon is the launch?", options: [
         ["Less than 2 weeks", 0], ["2-4 weeks", 1], ["1-2 months", 2], ["More than 2 months", 3]
       ] },
-      { type: "choice", key: "audienceWarmth", pillar: "Audience", text: "How warm is the audience you're launching to?", options: [
+      { type: "choice", key: "audienceWarmth", pillar: "Audience", text: "On a scale of 1-10, how warm is the audience you're launching to?", options: [
         ["Mostly cold", 0], ["Aware but quiet", 1], ["Engaged but not waiting", 2], ["Already asking for it", 3]
       ] }
     ];
@@ -644,40 +644,6 @@
     let scores = {};
     let result = null;
 
-    const GOOGLE_FORM_PREFILL_FIELDS = {
-      path: "",
-      launch: "",
-      objective: "",
-      score: "",
-      strongest: "",
-      weakest: "",
-      summary: ""
-    };
-
-    function escapeHTML(value) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function buildLaunchBoxSummary() {
-      if (!result) return "";
-      return [
-        `Launch Path: ${selectedPath}`,
-        `What they are launching: ${answers[0]?.value || ""}`,
-        `Primary objective: ${answers[1]?.value || ""}`,
-        `LaunchBox Score: ${result.total}%`,
-        `Strongest Pillar: ${result.strongest}`,
-        `Biggest Implementation Gap: ${result.weakest}`,
-        "",
-        "Pillar Scores:",
-        ...Object.entries(result.percentages).map(([pillar, score]) => `- ${pillar}: ${score}%`)
-      ].join("\n");
-    }
-
     function showView(id) {
       document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
       document.getElementById(id).classList.add("active");
@@ -707,7 +673,7 @@
       document.getElementById("question-text").textContent = q.text;
       const area = document.getElementById("answer-area");
       if (q.type === "text") {
-        area.innerHTML = `<textarea class="field" id="text-answer" placeholder="${escapeHTML(q.placeholder || "")}">${escapeHTML(answers[step]?.value || "")}</textarea>`;
+        area.innerHTML = `<textarea class="field" id="text-answer" placeholder="${q.placeholder || ""}">${answers[step]?.value || ""}</textarea>`;
       } else {
         area.innerHTML = `<div class="options">${q.options.map((option, index) => `
           <button class="option ${answers[step]?.index === index ? "selected" : ""}" onclick="selectOption(${index})">${option[0]}</button>
@@ -782,8 +748,8 @@
     }
 
     function renderResult() {
-      const launchName = escapeHTML(answers[0]?.value || "your launch");
-      const objective = escapeHTML(answers[1]?.value || "your launch objective");
+      const launchName = answers[0]?.value || "your launch";
+      const objective = answers[1]?.value || "your launch objective";
       const weak = pillarCopy[result.weakest];
       const strong = pillarCopy[result.strongest];
       document.getElementById("result-view").innerHTML = `
@@ -872,44 +838,19 @@
     function goToGoogleForm() {
       const launchName = answers[0]?.value || "";
       const objective = answers[1]?.value || "";
-      const summary = buildLaunchBoxSummary();
-      const hasPrefillFields = Object.values(GOOGLE_FORM_PREFILL_FIELDS).some(Boolean);
-
-      if (!GOOGLE_FORM_URL || GOOGLE_FORM_URL === "YOUR_GOOGLE_FORM_LINK_HERE") {
+      const params = new URLSearchParams({
+        path: selectedPath,
+        launch: launchName,
+        objective,
+        score: result.total,
+        strongest: result.strongest,
+        weakest: result.weakest
+      });
+      if (GOOGLE_FORM_URL === "https://forms.gle/e3G3okoYXFkGmqtp9") {
         alert("Replace GOOGLE_FORM_URL in the HTML with your Google Form link.");
         return;
       }
-
-      if (hasPrefillFields) {
-        const params = new URLSearchParams();
-        const values = {
-          path: selectedPath,
-          launch: launchName,
-          objective,
-          score: `${result.total}%`,
-          strongest: result.strongest,
-          weakest: result.weakest,
-          summary
-        };
-
-        Object.entries(GOOGLE_FORM_PREFILL_FIELDS).forEach(([key, entryId]) => {
-          if (entryId) params.set(entryId, values[key] || "");
-        });
-
-        const separator = GOOGLE_FORM_URL.includes("?") ? "&" : "?";
-        window.open(`${GOOGLE_FORM_URL}${separator}${params.toString()}`, "_blank", "noopener");
-        return;
-      }
-
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(summary).finally(() => {
-          alert("Your LaunchBox summary has been copied. Paste it into the Google Form so Studio Cube receives your roadmap context.");
-          window.open(GOOGLE_FORM_URL, "_blank", "noopener");
-        });
-      } else {
-        alert(`Copy this LaunchBox summary into the Google Form:\n\n${summary}`);
-        window.open(GOOGLE_FORM_URL, "_blank", "noopener");
-      }
+      window.open(`${GOOGLE_FORM_URL}?${params.toString()}`, "_blank", "noopener");
     }
   </script>
 </body>
