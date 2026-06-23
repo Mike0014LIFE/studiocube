@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio Cube Launch Potential Audit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --black: #050505;
+      --ink: #101010;
+      --panel: #0e0e0e;
+      --line: #242424;
+      --muted: #a3a3a3;
+      --white: #ffffff;
+      --yellow: #ffc107;
+      --yellow-dark: #d9a300;
+      --red: #ef4444;
+      --orange: #f97316;
+      --green: #22c55e;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #111;
+      color: var(--white);
+      font-family: Inter, Arial, sans-serif;
+    }
+    button, input, textarea { font: inherit; }
+    .page {
+      width: min(960px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      background: var(--black);
+      overflow: hidden;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--line);
+    }
+    .logo {
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+    .logo span { color: var(--yellow); }
+    .badge {
+      border: 1px solid rgba(255, 193, 7, .45);
+      color: var(--yellow);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .hero {
+      position: relative;
+      padding: 64px 32px 44px;
+      isolation: isolate;
+    }
+    .hero:before {
+      content: "";
+      position: absolute;
+      top: 22px;
+      right: 24px;
+      width: 150px;
+      height: 150px;
+      background-image: radial-gradient(var(--yellow) 2px, transparent 2px);
+      background-size: 18px 18px;
+      opacity: .16;
+      z-index: -1;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+    h1 {
+      max-width: 720px;
+      margin: 0 0 18px;
+      font-size: 48px;
+      line-height: 1.02;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    h1 span { color: var(--yellow); display: block; }
+    .sub {
+      max-width: 610px;
+      margin: 0 0 30px;
+      color: #c7c7c7;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 6px;
+      padding: 14px 22px;
+      background: var(--yellow);
+      color: #000;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      text-decoration: none;
+    }
+    .btn:hover { background: var(--yellow-dark); }
+    .btn.secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid #3a3a3a;
+    }
+    .btn.secondary:hover {
+      border-color: var(--yellow);
+      color: var(--yellow);
+      background: transparent;
+    }
+    .section {
+      padding: 40px 32px;
+      border-top: 1px solid var(--line);
+    }
+    .section-label {
+      margin: 0 0 22px;
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .mini {
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+    .mini strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .mini p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .view { display: none; }
+    .view.active { display: block; }
+    .back {
+      margin: 0 0 22px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .question {
+      max-width: 720px;
+      margin: 0 0 22px;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 900;
+    }
+    .progress {
+      height: 4px;
+      margin: 0 0 26px;
+      background: #1b1b1b;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--yellow);
+      transition: width .2s ease;
+    }
+    .niche-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .choice {
+      width: 100%;
+      min-height: 62px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--white);
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.35;
+    }
+    .choice:hover, .choice.selected {
+      border-color: var(--yellow);
+      background: rgba(255, 193, 7, .08);
+    }
+    .choice.selected { color: var(--yellow); }
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 16px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--white);
+      cursor: pointer;
+      text-align: left;
+    }
+    .option-dot {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #4a4a4a;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+    .option.selected {
+      border-color: var(--yellow);
+      background: rgba(255, 193, 7, .08);
+    }
+    .option.selected .option-dot {
+      border: 5px solid var(--yellow);
+      background: #000;
+    }
+    .quiz-nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .result-hero {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      gap: 26px;
+      padding: 26px;
+      margin-bottom: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+    .ring {
+      position: relative;
+      width: 150px;
+      height: 150px;
+    }
+    .ring svg { transform: rotate(-90deg); }
+    .ring-score {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--yellow);
+      font-size: 32px;
+      font-weight: 900;
+    }
+    .result-title {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.15;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .result-copy {
+      margin: 0;
+      color: #cfcfcf;
+      line-height: 1.65;
+      font-size: 15px;
+    }
+    .pillar-grid {
+      display: grid;
+      gap: 10px;
+      margin: 22px 0;
+    }
+    .pillar {
+      display: grid;
+      grid-template-columns: 130px 1fr 46px;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #0b0b0b;
+      border: 1px solid #1f1f1f;
+      border-radius: 6px;
+    }
+    .pillar-name {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+    .bar {
+      height: 8px;
+      background: #202020;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar span {
+      display: block;
+      height: 100%;
+      background: var(--yellow);
+      border-radius: 999px;
+    }
+    .pillar-score {
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: right;
+    }
+    .diagnosis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .box {
+      padding: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+    .box h3 {
+      margin: 0 0 10px;
+      color: var(--yellow);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .box p, .box li {
+      color: #d6d6d6;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .box p { margin: 0; }
+    .box ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .cta {
+      padding: 24px;
+      margin-top: 20px;
+      background: var(--yellow);
+      color: #000;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .cta h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+    .cta p {
+      max-width: 620px;
+      margin: 0 auto 18px;
+      color: rgba(0, 0, 0, .74);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .cta .btn {
+      width: min(360px, 100%);
+      background: #000;
+      color: var(--white);
+    }
+    .form-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d8d8d8;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid #303030;
+      border-radius: 6px;
+      padding: 13px 14px;
+      background: #0b0b0b;
+      color: var(--white);
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: var(--yellow); }
+    textarea { min-height: 100px; resize: vertical; }
+    .form-note {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 24px 32px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    @media (max-width: 768px) {
+      .nav { padding: 16px; }
+      .badge { font-size: 10px; padding: 5px 10px; }
+      .hero { padding: 42px 16px 34px; }
+      .hero:before { width: 108px; height: 108px; right: 8px; }
+      h1 { font-size: 28px; }
+      .sub { font-size: 14px; }
+      .section { padding: 32px 16px; }
+      .intro-grid, .diagnosis { grid-template-columns: 1fr; }
+      .actions, .quiz-nav { flex-direction: column; }
+      .btn { width: 100%; }
+      .question { font-size: 20px; }
+      .result-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+        padding: 22px 16px;
+      }
+      .result-title { font-size: 22px; }
+      .pillar {
+        grid-template-columns: 1fr 42px;
+        gap: 8px 12px;
+      }
+      .pillar .bar {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+      .pillar-score { grid-column: 2; grid-row: 1; }
+      .footer {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 22px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="nav">
+      <div class="logo">STUDIO<span>CUBE</span></div>
+      <div class="badge">Launch Pack</div>
+    </nav>
+
+    <section id="home" class="view active">
+      <div class="hero">
+        <p class="eyebrow">Free Launch Audit</p>
+        <h1>Most Launches Fail Before Launch Day. <span>Is Yours One Of Them?</span></h1>
+        <p class="sub">In 2 minutes, find out where your launch is leaking demand, visibility, conversion, or momentum before you spend money driving attention to it.</p>
+        <div class="actions">
+          <button class="btn" onclick="startAudit()">Take The Audit</button>
+          <button class="btn secondary" onclick="scrollToHow()">See What It Checks</button>
+        </div>
+      </div>
+      <section class="section" id="how">
+        <p class="section-label">What You Get</p>
+        <div class="intro-grid">
+          <div class="mini">
+            <strong>Your Launch Potential Score</strong>
+            <p>A clear percentage score that shows how much opportunity your launch may be leaving on the table.</p>
+          </div>
+          <div class="mini">
+            <strong>Your Biggest Opportunity</strong>
+            <p>Demand, clarity, visibility, conversion, or momentum. The audit points to the gap most likely to cost you.</p>
+          </div>
+          <div class="mini">
+            <strong>A Niche-Specific Diagnosis</strong>
+            <p>Coaches, CSR teams, NGOs, event brands, creatives, and personal brands do not get the same generic result.</p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section id="niche-view" class="view section">
+      <button class="back" onclick="showView('home')">Back</button>
+      <p class="section-label">Step 1 of 2</p>
+      <h2 class="question">Which best describes your brand?</h2>
+      <div class="niche-grid" id="niche-grid"></div>
+      <button class="btn" id="niche-next" onclick="startQuestions()" style="display:none">Continue</button>
+    </section>
+
+    <section id="quiz-view" class="view section">
+      <button class="back" onclick="showView('niche-view')">Back</button>
+      <p class="section-label" id="question-label">Question 1 of 10</p>
+      <div class="progress"><span id="progress-fill"></span></div>
+      <h2 class="question" id="question-text"></h2>
+      <div class="options" id="options"></div>
+      <div class="quiz-nav" id="quiz-nav"></div>
+    </section>
+
+    <section id="result-view" class="view section"></section>
+
+    <section id="lead-view" class="view section">
+      <button class="back" onclick="showView('result-view')">Back to results</button>
+      <div class="form-wrap">
+        <p class="section-label">Get My Launch Roadmap</p>
+        <h2 class="question">Tell Studio Cube where to send your roadmap.</h2>
+        <p class="form-note">This captures the lead before the booking page, so even if someone drops off before choosing a time, the Studio Cube team can follow up with context.</p>
+        <form id="lead-form" onsubmit="submitLead(event)">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" autocomplete="tel" required>
+          </div>
+          <div class="field">
+            <label for="brand">Brand / Company</label>
+            <input id="brand" name="brand" required>
+          </div>
+          <div class="field">
+            <label for="launch-date">Launch date</label>
+            <input id="launch-date" name="launch-date" placeholder="Example: August 2026">
+          </div>
+          <div class="field">
+            <label for="challenge">Biggest launch challenge</label>
+            <textarea id="challenge" name="challenge" required></textarea>
+          </div>
+          <button class="btn" type="submit">Continue To Booking</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <strong>STUDIO<span style="color:var(--yellow)">CUBE</span></strong>
+      <span>Launch strategy for brands that need attention to become action.</span>
+    </footer>
+  </main>
+
+  <script>
+    const FORM_URL = "YOUR_GOOGLE_FORM_LINK_HERE";
+    const BOOKING_URL = "YOUR_CALENDAR_LINK_HERE";
+
+    const niches = [
+      "Coach / Consultant",
+      "CSR / Corporate",
+      "NGO / Foundation",
+      "Event Business",
+      "Cinema / Film / Art",
+      "Personal Brand",
+      "Micro-Influencer"
+    ];
+
+    const questions = [
+      { pillar: "Demand", text: "If your launch happened tomorrow, how many people would already know it's coming?", options: ["Almost nobody", "A handful of people", "A decent number", "Lots of people are already waiting"] },
+      { pillar: "Demand", text: "How often do people ask about what you're launching?", options: ["Never", "Occasionally", "Weekly", "Frequently"] },
+      { pillar: "Clarity", text: "If someone discovered your brand today, how easily would they understand why they should choose you?", options: ["They probably wouldn't", "They'd need some explanation", "They'd mostly understand", "They'd immediately get it"] },
+      { pillar: "Clarity", text: "How clear is the main result people expect from working with you?", options: ["Not clear", "Somewhat clear", "Clear", "Extremely clear"] },
+      { pillar: "Visibility", text: "Beyond your followers, who will hear about this launch?", options: ["Nobody", "A few partners", "Some communities and collaborators", "Multiple channels, partners and media opportunities"] },
+      { pillar: "Visibility", text: "If you stopped posting today, what other channels would still drive attention to this launch?", options: ["None", "One", "A few", "Several reliable channels"] },
+      { pillar: "Conversion", text: "If someone became interested right now, how quickly could they take the next step?", options: ["They'd probably get confused", "They could eventually figure it out", "It's fairly easy", "It's obvious and frictionless"] },
+      { pillar: "Conversion", text: "How confident are you that attention will turn into action?", options: ["Not confident", "Slightly confident", "Confident", "Very confident"] },
+      { pillar: "Momentum", text: "After launch day, what happens next?", options: ["Nothing planned", "A few follow-ups", "A structured follow-up sequence", "A clear long-term momentum strategy"] },
+      { pillar: "Momentum", text: "If your launch performs well, are you prepared to sustain the interest?", options: ["No", "Somewhat", "Mostly", "Absolutely"] }
+    ];
+
+    const pillarLabels = {
+      Demand: "Demand Generation",
+      Clarity: "Offer Clarity",
+      Visibility: "Visibility Engine",
+      Conversion: "Conversion Path",
+      Momentum: "Post-Launch Momentum"
+    };
+
+    const defaultDiagnosis = {
+      Demand: "Your audience is not anticipating this launch yet. That does not mean the offer is weak. It means demand has not been built early enough.",
+      Clarity: "People may notice the brand but still miss why it matters. A launch needs a sharp reason to care before it asks for action.",
+      Visibility: "The launch may be depending too heavily on your current audience. Strong launches need distribution beyond the people already watching.",
+      Conversion: "Attention exists, but the next step may not be obvious enough. Every extra decision can cost leads, sales, bookings, or attendance.",
+      Momentum: "You may struggle to maintain interest after launch day. Without a post-launch plan, excitement can disappear within days."
+    };
+
+    const nicheDiagnosis = {
+      "Coach / Consultant": {
+        Demand: "You may be launching an offer nobody is actively waiting for.",
+        Conversion: "Attention exists, but your path to booking clients is not strong enough.",
+        Clarity: "Your expertise may be clear to you, but prospects may not immediately understand the result they are buying."
+      },
+      "CSR / Corporate": {
+        Visibility: "Your CSR activity may be stronger than public awareness of it.",
+        Momentum: "One-off campaigns make it harder to build long-term trust with communities, media, and leadership.",
+        Clarity: "The impact story may be buried under corporate language instead of becoming something people can repeat."
+      },
+      "NGO / Foundation": {
+        Visibility: "Your impact may be stronger than your awareness.",
+        Momentum: "One-off campaigns make it harder to build long-term donor trust.",
+        Conversion: "People may care about the cause but still need a clearer path to donate, volunteer, partner, or share."
+      },
+      "Event Business": {
+        Demand: "You are relying on launch-day excitement rather than pre-event anticipation.",
+        Conversion: "Interest does not automatically become ticket sales.",
+        Momentum: "Post-event energy may be dying before it becomes referrals, repeat attendance, or press."
+      },
+      "Cinema / Film / Art": {
+        Visibility: "Your creative community may hear about it, while the wider public and press never get pulled in.",
+        Demand: "People may discover the screening, exhibition, or release too late to plan around it.",
+        Conversion: "Awareness needs a cleaner route into ticket sales, attendance, reviews, or shares."
+      },
+      "Personal Brand": {
+        Clarity: "People know your name but may not understand your value.",
+        Conversion: "Visibility is not yet turning into paid opportunities, leads, or serious enquiries.",
+        Momentum: "Your launch moment may not be connected to a longer positioning strategy."
+      },
+      "Micro-Influencer": {
+        Conversion: "Engagement is not yet translating into income, brand deals, or owned offers.",
+        Clarity: "Brands may like your content but still need a sharper reason to choose you.",
+        Demand: "Your audience may enjoy your posts without anticipating a specific offer from you."
+      }
+    };
+
+    let selectedNiche = "";
+    let currentQuestion = 0;
+    let answers = [];
+    let latestResult = null;
+
+    function showView(id) {
+      document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function scrollToHow() {
+      document.getElementById("how").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function startAudit() {
+      selectedNiche = "";
+      answers = [];
+      currentQuestion = 0;
+      buildNiches();
+      showView("niche-view");
+    }
+
+    function buildNiches() {
+      const grid = document.getElementById("niche-grid");
+      grid.innerHTML = niches.map(niche => `<button class="choice" type="button" onclick="selectNiche('${niche.replace(/'/g, "\\'")}', this)">${niche}</button>`).join("");
+      document.getElementById("niche-next").style.display = "none";
+    }
+
+    function selectNiche(niche, el) {
+      selectedNiche = niche;
+      document.querySelectorAll(".choice").forEach(choice => choice.classList.remove("selected"));
+      el.classList.add("selected");
+      document.getElementById("niche-next").style.display = "inline-flex";
+    }
+
+    function startQuestions() {
+      if (!selectedNiche) return;
+      currentQuestion = 0;
+      answers = [];
+      renderQuestion();
+      showView("quiz-view");
+    }
+
+    function renderQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("question-label").textContent = `${q.pillar} | Question ${currentQuestion + 1} of ${questions.length}`;
+      document.getElementById("progress-fill").style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+      document.getElementById("question-text").textContent = q.text;
+      document.getElementById("options").innerHTML = q.options.map((option, index) => `
+        <button class="option ${answers[currentQuestion] === index ? "selected" : ""}" type="button" onclick="selectAnswer(${index})">
+          <span class="option-dot"></span>
+          <span>${option}</span>
+        </button>
+      `).join("");
+      renderNav();
+    }
+
+    function selectAnswer(index) {
+      answers[currentQuestion] = index;
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion += 1;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function renderNav() {
+      const nav = document.getElementById("quiz-nav");
+      const hasAnswer = answers[currentQuestion] !== undefined;
+      nav.innerHTML = "";
+      if (currentQuestion > 0) {
+        nav.innerHTML += `<button class="btn secondary" type="button" onclick="previousQuestion()">Back</button>`;
+      }
+      if (hasAnswer) {
+        nav.innerHTML += `<button class="btn" type="button" onclick="nextQuestion()">${currentQuestion === questions.length - 1 ? "See My Score" : "Next"}</button>`;
+      }
+    }
+
+    function previousQuestion() {
+      currentQuestion -= 1;
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (answers[currentQuestion] === undefined) return;
+      if (currentQuestion === questions.length - 1) showResults();
+      else {
+        currentQuestion += 1;
+        renderQuestion();
+      }
+    }
+
+    function calculateResults() {
+      const pillars = {};
+      questions.forEach((q, index) => {
+        if (!pillars[q.pillar]) pillars[q.pillar] = { score: 0, max: 0 };
+        pillars[q.pillar].score += answers[index] || 0;
+        pillars[q.pillar].max += 3;
+      });
+      const percentages = Object.fromEntries(Object.entries(pillars).map(([key, val]) => [key, Math.round((val.score / val.max) * 100)]));
+      const total = Math.round(Object.values(percentages).reduce((sum, val) => sum + val, 0) / Object.keys(percentages).length);
+      const biggestRisk = Object.entries(percentages).sort((a, b) => a[1] - b[1])[0][0];
+      return { percentages, total, biggestRisk };
+    }
+
+    function resultTone(score) {
+      if (score >= 80) return { color: "var(--green)", title: "Strong Launch Potential" };
+      if (score >= 60) return { color: "var(--yellow)", title: "Promising, But Leaking Opportunity" };
+      if (score >= 40) return { color: "var(--orange)", title: "Major Opportunity Gaps" };
+      return { color: "var(--red)", title: "High Risk Of A Quiet Launch" };
+    }
+
+    function showResults() {
+      latestResult = calculateResults();
+      const tone = resultTone(latestResult.total);
+      const risk = latestResult.biggestRisk;
+      const diagnosis = (nicheDiagnosis[selectedNiche] && nicheDiagnosis[selectedNiche][risk]) || defaultDiagnosis[risk];
+      const radius = 62;
+      const circumference = 2 * Math.PI * radius;
+      const filled = circumference * (latestResult.total / 100);
+
+      document.getElementById("result-view").innerHTML = `
+        <button class="back" onclick="startAudit()">Retake audit</button>
+        <p class="section-label">Your Results</p>
+        <div class="result-hero">
+          <div class="ring">
+            <svg width="150" height="150" viewBox="0 0 150 150">
+              <circle cx="75" cy="75" r="${radius}" fill="none" stroke="#202020" stroke-width="12"></circle>
+              <circle cx="75" cy="75" r="${radius}" fill="none" stroke="${tone.color}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${filled} ${circumference}"></circle>
+            </svg>
+            <div class="ring-score">${latestResult.total}%</div>
+          </div>
+          <div>
+            <h2 class="result-title">Your Launch Potential Score</h2>
+            <p class="result-copy">${tone.title}. Your biggest opportunity is <strong>${pillarLabels[risk]}</strong>.</p>
+          </div>
+        </div>
+
+        <div class="pillar-grid">
+          ${Object.entries(latestResult.percentages).map(([pillar, score]) => `
+            <div class="pillar">
+              <div class="pillar-name">${pillar}</div>
+              <div class="bar"><span style="width:${score}%"></span></div>
+              <div class="pillar-score">${score}%</div>
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="diagnosis">
+          <div class="box">
+            <h3>Biggest Opportunity</h3>
+            <p>${pillarLabels[risk]}</p>
+          </div>
+          <div class="box">
+            <h3>What This Means</h3>
+            <p>${diagnosis}</p>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Estimated Impact</h3>
+          <ul>
+            <li>Improving ${pillarLabels[risk].toLowerCase()} could increase sales, attendance, visibility, engagement, or qualified enquiries.</li>
+            <li>Brands with similar scores typically struggle most when attention is created too late or not converted clearly enough.</li>
+            <li>Studio Cube can review this score and map the launch moves that should happen before, during, and after launch day.</li>
+          </ul>
+        </div>
+
+        <div class="cta">
+          <h2>Get Your Launch Roadmap</h2>
+          <p>Book a free Launch Strategy Session and Studio Cube will show you how they would close your biggest launch gap before it costs you momentum.</p>
+          <button class="btn" onclick="openLeadForm()">Get My Launch Roadmap</button>
+        </div>
+      `;
+      showView("result-view");
+    }
+
+    function openLeadForm() {
+      showView("lead-view");
+    }
+
+    function submitLead(event) {
+      event.preventDefault();
+      const query = latestResult
+        ? `?score=${encodeURIComponent(latestResult.total)}&risk=${encodeURIComponent(latestResult.biggestRisk)}&niche=${encodeURIComponent(selectedNiche)}`
+        : "";
+      if (FORM_URL !== "YOUR_GOOGLE_FORM_LINK_HERE") {
+        window.open(FORM_URL + query, "_blank", "noopener");
+      }
+      if (BOOKING_URL !== "YOUR_CALENDAR_LINK_HERE") {
+        window.location.href = BOOKING_URL;
+      } else {
+        alert("Lead captured. Replace BOOKING_URL with your calendar link to redirect after this step.");
+      }
+    }
+  </script>
+</body>
+</html>
